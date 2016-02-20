@@ -55,7 +55,7 @@ double time_random_acesses(void * arr,const uint64_t size,const uint64_t iters){
 
 
 int main(){
-	const uint64_t ters = 27;
+	const uint64_t ters = 28;
 	const uint64_t num_iters = (1ULL << ters);
 	for(uint64_t s = 13; s < 27;s++){
 		//b splits the power of two into num_bt parts, to make a more continous plot of sizes
