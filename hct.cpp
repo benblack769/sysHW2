@@ -4,8 +4,6 @@
 #include <cstdlib>
 #include <cstring>
 using namespace std;
-constexpr uint64_t rand_size = 256;
-
 
 uint64_t Rand(){
 	return rand();
@@ -15,7 +13,7 @@ uint64_t LongRand(){
 }
 uint64_t get_time_ns(){
 	timespec t;
-	clock_gettime(CLOCK_MONOTONIC_RAW,&t);
+	clock_gettime(0,&t);
  	return 1000000000ULL * t.tv_sec + t.tv_nsec;
 }
 
@@ -31,14 +29,15 @@ void run_random_acesses(link * arr,const uint64_t iters){
 		cout << "this foils the dead code elimination so that this benchmark can work\n";
 }
 
-double time_random_acesses(void * arr,const uint64_t size,const size_t andnum,const uint64_t iters){
+double time_random_acesses(void * arr,const uint64_t size,const uint64_t iters){
 	memset(arr,0,size);
-	
+
+	//larr is linked in a way that it is still random even though it is cycling in a huge loop which includes 98% of the elements
 	link * larr = (link *)(arr);
-	size_t lsize = size/8;
-	
+	size_t lsize = size/sizeof(link*);
+
 	link * curl = larr;
-	for(int i = 0;i < lsize-lsize/50;i++){
+	for(size_t i = 0;i < lsize-lsize/50;i++){
 		size_t nextindex;
 		do{
 			nextindex = LongRand() % lsize;
@@ -48,7 +47,7 @@ double time_random_acesses(void * arr,const uint64_t size,const size_t andnum,co
 		curl = curl->next;
 	}
 	curl->next = larr;
-	
+
 	uint64_t st = get_time_ns();
 	run_random_acesses(larr,iters);
 	return (get_time_ns() - st) / (double)(iters);
@@ -56,14 +55,15 @@ double time_random_acesses(void * arr,const uint64_t size,const size_t andnum,co
 
 
 int main(){
-	const uint64_t ters = 30;
+	const uint64_t ters = 27;
+	const uint64_t num_iters = (1ULL << ters);
 	for(uint64_t s = 13; s < 27;s++){
-		const int64_t num_bt = 3;
+		//b splits the power of two into num_bt parts, to make a more continous plot of sizes
+		const int64_t num_bt = 2;
 		for(int64_t b = (1 << num_bt) - 1; b >= 0; b--){
-			uint64_t num_iters = (1ULL << ters);
 			uint64_t size = (1ULL << s) - (b << (s-num_bt-1));
 			void * buff = malloc(size);
-			double time = time_random_acesses(buff,size,size-1,num_iters);
+			double time = time_random_acesses(buff,size,num_iters);
 			cout << size << "\t\t" << time << endl;
 			free(buff);
 		}
