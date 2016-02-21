@@ -32,8 +32,8 @@ uint64_t cupid_call(uint64_t in1){
     return Bytes;
 }
 int main(){
-    cout << cupid_call(1) << endl;
-    cout << cupid_call(2) << endl;
-    cout << cupid_call(3) << endl;
+    cout << "L1 Cache size = " << cupid_call(1) << endl;
+    cout << "L2 Cache size = " << cupid_call(2) << endl;
+    cout << "L3 Cache size = " << cupid_call(3) << endl;
     return 0;
 }
