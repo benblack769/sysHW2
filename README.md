@@ -31,7 +31,7 @@ I collected data by going into the linux command line, turning off the GUI entir
 
 Data plot:
 
-![alt text](https://github.com/weepingwillowben/sysHW2/clean.png "Clean graph")
+![alt text](https://github.com/weepingwillowben/sysHW2/blob/master/clean.png "Clean graph")
 
 In the plot of the data, there is a fairly clear increase in latency at 
 
