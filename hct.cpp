@@ -3,8 +3,14 @@
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 using namespace std;
-//#define UNROLLED
+#define UNROLLED
+#define MULTI_ITERS
+constexpr int64_t HIGH_POW2 = 27;
+constexpr int64_t LOW_POW2 = 13;
+constexpr uint64_t iters = 28;
+
 uint64_t Rand(){
 	return rand();
 }
@@ -66,12 +72,9 @@ double time_random_acesses(void * arr,const uint64_t size,const uint64_t iters){
 	run_random_acesses(larr,iters);
 	return (get_time_ns() - st) / (double)(iters);
 }
-
-
 int main(){
-	const uint64_t ters = 28;
-	const uint64_t num_iters = (1ULL << ters);
-	for(uint64_t s = 13; s < 27;s++){
+	const uint64_t num_iters = (1ULL << iters);
+	for(uint64_t s = LOW_POW2; s < HIGH_POW2;s++){
 		//b splits the power of two into num_bt parts, to make a more continous plot of sizes
 		const int64_t num_bt = 2;
 		for(int64_t b = (1 << num_bt) - 1; b >= 0; b--){
