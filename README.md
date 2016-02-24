@@ -1,4 +1,4 @@
-Filename | descrtiption |
+Filename | Description |
 --- | ---
 hct.cpp 					|c++ latency measurement code
 cupid.cpp					|c++ tool to gather cache size data using inline asm calls to cupid
@@ -69,7 +69,7 @@ After I got the true cache sizes from cupid, I made another plot, using the abov
 
 I think it shows that the above model is a pretty good for truly random accesses on Intel's cache system. At the junction between the caches, there is a substantial difference between the expected and the real. Two places are especially interesting:
 
-Rather than flattening out, the 
+Rather than flattening out, the
 
 By the way, the latencies I guessed which matched the data fairly well are:
 
