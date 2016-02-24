@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 using namespace std;
-#define UNROLLED
+//#define UNROLLED
 uint64_t Rand(){
 	return rand();
 }
@@ -21,7 +21,7 @@ struct link{
 	link * next;
 };
 void run_random_acesses(link * arr,const uint64_t iters){
-	uint64_t i = 0; 
+	uint64_t i = 0;
 #ifdef UNROLLED
 	for(;i < iters-8; i+=8){
 		arr = arr->next;
