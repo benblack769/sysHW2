@@ -65,9 +65,9 @@ The graph is not monotonous or a step function, which should be expected because
 
 After I got the true cache sizes from cupid, I made another plot, using the above formula and guessed values for the true latencies until the plot of the above function matched the data fairly well.
 
-![alt text](https://github.com/weepingwillowben/sysHW2/blob/master/measured.png "Clean graph")
+![alt text](https://github.com/weepingwillowben/sysHW2/blob/master/measured.png "fitted graph")
 
-I think it shows that the above model is a pretty good for truly random accesses on Intel's cache system. At the junction between the caches, there is a substantial difference between the expected and the real. Two places are especially interesting:
+I think it shows that the above model is a an OK model for truly random accesses on Intel's cache system. But there are some issues. At the junction between the caches, there is a substantial difference between the expected and the real. Two places are especially interesting:
 
 Rather than flattening out, the
 
@@ -79,3 +79,11 @@ By the way, the latencies I guessed which matched the data fairly well are:
     Main memory = 78.5 ns
 
 So presumably the true latencies are close to these. The numbers are fairly close to the numbers in the chart, except the L1 cache latency is twice what was expected (since my machine is running at around 3.3ghertz, 1.1ns is almost exactly 3 cycles). I have no idea why. It is very possible that the loop isn't perfectly optimized and that it is doing other things than accessing random pointers. However, unrolling the loop did not help noticeably, so this seems unlikely (the unrolled code gets turned into a series of mov instructions). It might be that system interrupts slowed it down in some consistent way, but increasing the number of iterations also did not help, so this also seems unlikely. Another possibility is that it really does take 3 cycles to access a single value, put it in a register, and start the next memory access. However, most of the time, due to the effects of pipelining and instruction-level parallelism, latency appears to be much lower.
+
+Here is a plot of 12 latency tests conducted on 2^23 iterations:
+
+![alt text](https://github.com/weepingwillowben/sysHW2/blob/master/box.png "error graph")
+
+This is interesting because the points that have the most error seem to be those between the L1 and the L2 cache. Note that I seeded my random generator to a constant, so my algorithm is deterministic. So all the error shown is messiness in the system, not my code. This also shows that the dip in latency that occurs after 2^21 bytes is reasonably consistent between tests, so it is either there is something interesting going on in the L3 cache that makes things faster, or my random algorithm is doing something weird with those sizes of bytes. Unfortunately, I have not had time to check that it is the former.
+
+One explanation of why the performance around the L2 cache size is worse than expected and has a lot of variance is that the prefetcher loads data into the L1 and L2 cache that the process will never use, or another CPU level cache optimization fails in a similar way. After all, these machines really aren't built to deal with random accesses.
